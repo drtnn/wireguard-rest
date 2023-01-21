@@ -40,11 +40,11 @@ class WireguardService:
 
     @staticmethod
     def generate_private_key() -> str:
-        return subprocess.check_output(["wg", "genkey"]).decode().split("\"")[1]
+        return subprocess.check_output(["wg", "genkey"]).decode().replace("\n", "")
 
     @staticmethod
     def generate_public_key(private_key: str) -> str:
-        return subprocess.check_output(["echo", "\"{private_key}\"", "|", "wg", "pubkey"]).decode().split("\"")[1]
+        return subprocess.check_output(["echo", "\"{private_key}\"", "|", "wg", "pubkey"]).decode().replace("\n", "")
 
     @staticmethod
     def generate_peer_configuration(user: User):
