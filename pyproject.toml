@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "wireguard-rest"
+version = "0.1.0"
+description = ""
+authors = ["arutyunyan <8david@inbox.ru>"]
+readme = "README.md"
+packages = [{ include = "wireguard_rest" }]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.89.1"
+uvicorn = "^0.20.0"
+aiofiles = "^22.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
