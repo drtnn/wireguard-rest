@@ -35,16 +35,20 @@ class WireguardService:
 
     @staticmethod
     def restart_wireguard_service():
-        return subprocess.run("systemctl restart wg-quick@wg0")
+        return subprocess.run(
+            "systemctl restart wg-quick@wg0", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
 
     @staticmethod
     def generate_private_key() -> str:
-        r = subprocess.run("wg genkey")
+        r = subprocess.run("wg genkey", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         return r.stdout.decode().replace("\n", "")
 
     @staticmethod
     def generate_public_key(private_key: str) -> str:
-        r = subprocess.run(f"echo \"{private_key}\" | wg pubkey")
+        r = subprocess.run(
+            f"echo \"{private_key}\" | wg pubkey", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
         return r.stdout.decode().replace("\n", "")
 
     @staticmethod
