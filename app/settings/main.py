@@ -4,6 +4,8 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
+    AUTH_TOKEN: str = "auth_token"
+
     WG_DATA_DIR_PATH: str = os.path.join(
         os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))), "wg-data"
     )

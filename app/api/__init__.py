@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from .user import router as user_router
-from .wireguard import router as wireguard_router
+from .endpoints.user import router as user_router
+from .endpoints.wireguard import router as wireguard_router
 
 router = APIRouter()
 
