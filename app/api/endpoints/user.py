@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from fastapi.security import HTTPAuthorizationCredentials
 from starlette import status
+from starlette.responses import PlainTextResponse
 
 from app.api.deps import authentication_scheme
 from app.models.user import UserList, UserCreate, User, UserPeerConfiguration
@@ -54,3 +55,10 @@ async def peer_configuration(id: int, authentication: HTTPAuthorizationCredentia
     user_service = await JsonUserService.new()
     configuration = user_service.peer_configuration(id=id)
     return UserPeerConfiguration(configuration=configuration)
+
+
+@router.get("/user/{id}/peer-configuration/text", response_class=PlainTextResponse, status_code=status.HTTP_200_OK)
+async def peer_configuration(id: int, authentication: HTTPAuthorizationCredentials = Depends(authentication_scheme)):
+    user_service = await JsonUserService.new()
+    configuration = user_service.peer_configuration(id=id)
+    return configuration
