@@ -1,16 +1,11 @@
-import json
-from typing import Dict, List
+from abc import abstractmethod, ABC
+from typing import List, Dict
 
-import aiofiles
-from pydantic import parse_obj_as
-
-from app.models.user import User, UserCreate, UserList
+from app.models.user import UserCreate, User
 from app.services.wireguard import WireguardService
-from app.settings.main import settings
 
 
-class BaseUserService:
-    users_file_path: str = settings.USERS_FILE_PATH
+class BaseUserService(ABC):
     users_by_id: Dict[int, User]
 
     @classmethod
@@ -32,9 +27,11 @@ class BaseUserService:
         ids = self.users_by_id.keys()
         return max(ids) if ids else 1
 
+    @abstractmethod
     async def load_users(self) -> Dict[int, User]:
         raise NotImplementedError
 
+    @abstractmethod
     async def dump_users(self):
         raise NotImplementedError
 
@@ -70,15 +67,3 @@ class BaseUserService:
 
     def peer_configuration(self, id: int) -> str:
         return WireguardService.generate_peer_configuration(user=self.users_by_id[id])
-
-
-class JsonUserService(BaseUserService):
-    async def load_users(self) -> Dict[int, User]:
-        async with aiofiles.open(self.users_file_path, encoding="utf-8") as file:
-            users = json.loads(await file.read())
-        return {user.id: user for user in parse_obj_as(UserList, users).__root__}
-
-    async def dump_users(self):
-        user_list = UserList(__root__=self.users)
-        async with aiofiles.open(self.users_file_path, "w", encoding="utf-8") as file:
-            await file.write(json.dumps(user_list.dict(), indent=4))
