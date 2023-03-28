@@ -1,13 +1,11 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Dict
 
-from app.models.user import User
+from app.models.user import User, UserStatistic
 from app.settings.wireguard import wireguard_settings
 
 
 class BaseWireguardService(ABC):
-    configuration_file_path: str = wireguard_settings.WIREGUARD_FILE_PATH
-
     @staticmethod
     @abstractmethod
     async def update_configuration(users: List[User]):
@@ -26,6 +24,11 @@ class BaseWireguardService(ABC):
     @staticmethod
     @abstractmethod
     def generate_public_key(private_key: str) -> str:
+        raise NotImplementedError
+
+    @staticmethod
+    @abstractmethod
+    def get_peers_statistic() -> Dict[str, UserStatistic]:
         raise NotImplementedError
 
     @staticmethod

@@ -24,3 +24,10 @@ class UserList(BaseModel):
 
 class UserPeerConfiguration(BaseModel):
     configuration: str
+
+
+class UserStatistic(BaseModel):
+    endpoint: str
+    allowed_ips: str
+    latest_handshake: str
+    transfer: str

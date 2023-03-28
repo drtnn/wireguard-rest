@@ -1,7 +1,7 @@
 from abc import abstractmethod, ABC
 from typing import List, Dict
 
-from app.models.user import UserCreate, User
+from app.models.user import UserCreate, User, UserStatistic
 from app.services.wireguard import WireguardService
 
 
@@ -67,3 +67,7 @@ class BaseUserService(ABC):
 
     def peer_configuration(self, id: int) -> str:
         return WireguardService.generate_peer_configuration(user=self.users_by_id[id])
+
+    def peer_statistic(self, id: int) -> UserStatistic:
+        public_key = self.users_by_id[id].public_key
+        return WireguardService.get_peers_statistic()[public_key]

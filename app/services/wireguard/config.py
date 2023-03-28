@@ -1,10 +1,10 @@
 import logging
 import subprocess
-from typing import List
+from typing import List, Dict
 
 import aiofiles
 
-from app.models.user import User
+from app.models.user import User, UserStatistic
 from app.services.wireguard.base import BaseWireguardService
 from app.settings.wireguard import wireguard_settings
 
@@ -54,3 +54,17 @@ class ConfigWireguardServiceImpl(BaseWireguardService):
             f"echo \"{private_key}\" | wg pubkey", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
         return r.stdout.decode().replace("\n", "")
+
+    @staticmethod
+    def get_peers_statistic() -> Dict[str, UserStatistic]:
+        r = subprocess.run("wg show", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output = r.stdout.decode()
+
+        peers_statistic = {}
+        for peer_statistic in output.split("\n\n")[1:]:
+            lines = peer_statistic.split("\n")
+            peers_statistic[lines[0].split(": ")[1]] = UserStatistic.parse_obj({
+                splitted_line[0].replace(" ", "_"): splitted_line[1]
+                for line in lines[1:] if (splitted_line := line.strip().split(": ", 1))
+            })
+        return peers_statistic
