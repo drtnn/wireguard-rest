@@ -80,5 +80,4 @@ async def peer_configuration(id: int, authentication: HTTPAuthorizationCredentia
 @router.get("/users/{id}/peer-statistic", response_model=UserStatistic, status_code=status.HTTP_200_OK)
 async def peer_configuration(id: int, authentication: HTTPAuthorizationCredentials = Depends(authentication_scheme)):
     user_service = await UserService.new()
-    peer_statistic = user_service.peer_statistic(id=id)
-    return UserStatistic(**peer_statistic)
+    return user_service.peer_statistic(id=id)
