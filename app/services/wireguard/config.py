@@ -58,7 +58,7 @@ class ConfigWireguardServiceImpl(BaseWireguardService):
     @staticmethod
     def get_peers_statistic() -> Dict[str, UserStatistic]:
         r = subprocess.run("wg show", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output = r.stdout.decode()
+        output = r.stdout.decode().strip()
 
         peers_statistic = {}
         for peer_statistic in output.split("\n\n")[1:]:
